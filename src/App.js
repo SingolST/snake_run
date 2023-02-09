@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Cell from './Cell/Cell';
+import Button from 'react-bootstrap/Button';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 
-const BOARD_SIZE = 10;
+const BOARD_SIZE = 20;
 const DEFAULT_CELLS_VALUE = Array(BOARD_SIZE).fill(Array(BOARD_SIZE).fill(0))
 const AVAILABLE_MOVES = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft']
-const SPEED = 500
+const SPEED = 300
 
 const checkAvailableSlot = position => {
   switch(true) {
@@ -21,12 +23,11 @@ const checkAvailableSlot = position => {
 
 function App() {
 
-  const [snake, setSnake] = useState([[1, 1]]);
+  const [snake, setSnake] = useState([[1, 1], [2, 1], [3, 1]]);
   const [food, setFood] = useState([0, 0]);
   const [direction, setDirection] = useState(AVAILABLE_MOVES[0])
 
   const handleKeyDown = (event) => {
-    console.log(event.key)
     const index = AVAILABLE_MOVES.indexOf(event.key)
     if (index > -1) {
       setDirection(AVAILABLE_MOVES[index])
@@ -91,21 +92,28 @@ function App() {
   }
 
   return (
-    <div>
-      <h1>Результат {snake.length}</h1>
-      {DEFAULT_CELLS_VALUE.map((row, indexR) => (
-        <div key={indexR} className='row'>
-          {row.map((cell, indexC) => {
-            let type = snake.some(elem => elem[0] === indexR && elem[1] === indexC) && 'snake'
-            if (type !== 'snake'){
-              type = (food[0] === indexR & food[1] === indexC && 'food')
-            }
-            return (
-              <Cell key={indexC} type={type} />
-            )
-          })}
-        </div>
-      ))}
+    <div className='App'>
+      <h1><span>Snake</span> Game</h1>
+      <div className='board'>
+        {DEFAULT_CELLS_VALUE.map((row, indexR) => (
+          <div key={indexR} className='row'>
+            {row.map((cell, indexC) => {
+              let type = snake.some(elem => elem[0] === indexR && elem[1] === indexC) && 'snake'
+              if (type !== 'snake'){
+                type = (food[0] === indexR & food[1] === indexC && 'food')
+              }
+              return (
+                <Cell key={indexC} type={type} />
+              )
+            })}
+          </div>
+        ))}
+      </div>
+      <div className='button'>
+            <Button>Restart</Button>
+            <Button>Pause</Button>
+      </div>
+      <h1>Результат {(snake.length - 3) * 10}</h1>
     </div>
   );
 }
